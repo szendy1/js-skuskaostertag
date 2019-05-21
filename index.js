@@ -8,6 +8,7 @@ let boxSize = 50;
 let boxArray = [];
 let timer = 0;
 let stopGame = false;
+let next = 1;
 
 
 
@@ -35,7 +36,26 @@ function paintBg() {
   ctx.strokeStyle = '#003300';
   ctx.stroke();
 
+
   ctx.fillRect(0, cHeight - 50, cWidth, cHeight);
+  // Draw the ellipse
+  ctx.beginPath();
+  ctx.strokeStyle = '#00008B';
+  ctx.ellipse(100, 100, 50, 75, Math.PI / 3, 0, 2 * Math.PI);
+  ctx.stroke();
+
+
+  // Draw the ellipse
+  ctx.beginPath();
+  ctx.strokeStyle = '#00008B';
+  ctx.ellipse(280, 100, 50, 75, Math.PI /2, 0, 2 * Math.PI);
+  ctx.stroke();
+
+  // Draw the ellipse
+  ctx.beginPath();
+  ctx.strokeStyle = '#00008B';
+  ctx.ellipse(480, 130, 50, 75, Math.PI / 3, 0, 2*Math.PI);
+  ctx.stroke();
 
   paintScore();
 }
@@ -52,7 +72,7 @@ function paintBox(x, y, text) {
   ctx.fillStyle = "yellow"
   ctx.fillRect(x, y, boxSize, boxSize);
   ctx.fillStyle = "black";
-  ctx.fillText(text, x + 10, y + boxSize/2);
+  ctx.fillText(text, x + 10, y + boxSize / 2);
 
 }
 
@@ -77,7 +97,7 @@ function createBox() {
       let second = Math.floor(Math.random() * 10);
       if (first - second < 10 && first - second >= 0) {
         result = first - second;
-        text = ""+first + "-" + second;
+        text = "" + first + "-" + second;
         break;
       }
     }
@@ -88,13 +108,13 @@ function createBox() {
   var box = new myBox();
   box.posX = x;
   box.posY = 0.0;
-  box.speed = 0.1+Math.floor(Math.random() * 30)/10;
+  box.speed = 0.1 + Math.floor(Math.random() * 30) / 10;
   box.text = text;
   box.res = result;
   return box;
 }
 
-function isCollision(x2,y2) {
+function isCollision(x2, y2) {
   for (let i = 0; i < boxArray.length; i++) {
     let x1 = boxArray[i].posX;
     let y1 = boxArray[i].posY;
@@ -119,6 +139,7 @@ function myBox() {
 
 
 document.addEventListener('keydown', function (event) {
+  if (!stopGame)
     switch (event.which) {
       case 48: checkBox(0); break; //Left key
       case 49: checkBox(1); break; //Up key
@@ -135,10 +156,10 @@ document.addEventListener('keydown', function (event) {
 
 
 function checkBox(val) {
-  for (let i = 0; i<boxArray.length;i++){
-    if (boxArray[i].res == val ){
-      boxArray.splice(i,1);
-      score+=1;
+  for (let i = 0; i < boxArray.length; i++) {
+    if (boxArray[i].res == val) {
+      boxArray.splice(i, 1);
+      score += 1;
       playSound();
       return;
     }
@@ -150,36 +171,46 @@ function startGame() {
   boxArray = [];
   score = 0;
   boxArray.push(createBox());
-  requestAnimationFrame(() => {updateGame()});
+  requestAnimationFrame(() => { updateGame() });
 }
 
-function updateGame(){
-  if (new Date().getTime() - timer.getTime()> 3000){
+function updateGame() {
+  if (new Date().getTime() - timer.getTime() > 3000) {
 
     boxArray.push(createBox());
     timer = new Date();
   }
   paintBg();
   paintScore();
-  for (let i =0; i<boxArray.length;i++){
+  for (let i = 0; i < boxArray.length; i++) {
     boxArray[i].posY += boxArray[i].speed;
-    paintBox(boxArray[i].posX,boxArray[i].posY,boxArray[i].text);
+    paintBox(boxArray[i].posX, boxArray[i].posY, boxArray[i].text);
   }
   checkGroundCollision();
-  
+
   if (!stopGame)
-    requestAnimationFrame(() => {updateGame()});
+    requestAnimationFrame(() => { updateGame() });
 }
 
-function playSound(){
-
+function playSound() {
+  
+  var sound = document.getElementById("aud" + next);
+  next += 1;
+  if (next > 5) next = 1;
+  sound.play();
 }
 
-function checkGroundCollision(){
-  for (let i = 0; i< boxArray.length; i++){
-    if (boxArray[i].posY + boxSize >= cHeight - 50){
+function checkGroundCollision() {
+  for (let i = 0; i < boxArray.length; i++) {
+    if (boxArray[i].posY + boxSize >= cHeight - 50) {
       stopGame = true;
       console.log("STOP GAME")
+
+
+      ctx.font = 40 + "px Comic Sans MS";
+      ctx.fillStyle = "white";
+      ctx.fillText("Game Over", cWidth / 2 - 30, cHeight / 2);
     }
   }
 }
+
