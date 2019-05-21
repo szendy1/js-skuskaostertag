@@ -12,6 +12,7 @@ let next = 1;
 
 
 
+
 const canvas = document.getElementById('app');
 let ctx = canvas.getContext("2d");
 
@@ -19,6 +20,8 @@ paintBg();
 startGame();
 
 // Write Javascript code!
+
+
 
 
 function paintBg() {
@@ -166,6 +169,7 @@ function checkBox(val) {
   }
 }
 
+
 function startGame() {
   timer = new Date();
   boxArray = [];
@@ -175,7 +179,7 @@ function startGame() {
 }
 
 function updateGame() {
-  if (new Date().getTime() - timer.getTime() > 3000) {
+  if (new Date().getTime() - timer.getTime() > 1000) {
 
     boxArray.push(createBox());
     timer = new Date();

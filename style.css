@@ -1,3 +1,18 @@
 h1, h2 {
   font-family: Lato;
 }
+
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+canvas#bg {
+    position: absolute;
+    z-index: 0;
+}
+
+canvas#app {
+    position: absolute;
+    z-index: 0;
+}
