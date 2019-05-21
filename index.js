@@ -165,6 +165,7 @@ function updateGame(){
     boxArray[i].posY += boxArray[i].speed;
     paintBox(boxArray[i].posX,boxArray[i].posY,boxArray[i].text);
   }
+  checkGroundCollision();
   
   if (!stopGame)
     requestAnimationFrame(() => {updateGame()});
