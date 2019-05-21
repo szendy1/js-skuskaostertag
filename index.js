@@ -47,11 +47,12 @@ function paintScore() {
 }
 
 function paintBox(x, y, text) {
-
+  ctx.font = 10 + "px Comic Sans MS";
   ctx.fillStyle = "yellow"
   ctx.fillRect(x, y, boxSize, boxSize);
   ctx.fillStyle = "black";
-  ctx.fillText(text, x + boxSize / 2, y + 20);
+  ctx.fillText(text, x + 10, y + boxSize/2);
+
 }
 
 function createBox() {
@@ -73,13 +74,14 @@ function createBox() {
     while (1) {
       let first = Math.floor(Math.random() * 19);
       let second = Math.floor(Math.random() * 10);
-      if (first - second < 10) {
+      if (first - second < 10 && first - second >= 0) {
         result = first - second;
         text = ""+first + "-" + second;
         break;
       }
     }
   }
+  console.log(text)
   let x = -99;
   while (isCollision())
     x = Math.floor(Math.random() * (cWidth - boxSize));
@@ -89,7 +91,7 @@ function createBox() {
   box.speed = Math.floor(Math.random() * 50)/10;
   box.text = text;
   box.res = result;
-  boxArray.push(box);
+  return box;
 }
 
 function isCollision(x2,y2) {
@@ -148,7 +150,7 @@ function checkBox(val) {
 function startGame() {
   boxArray = [];
   score = 0;
-  createBox();
+  boxArray.push(createBox());
   requestAnimationFrame(() => {updateGame()});
 }
 
@@ -159,6 +161,8 @@ function updateGame(){
     boxArray[i].posY += boxArray[i].speed;
     paintBox(boxArray[i].posX,boxArray[i].posY,boxArray[i].text);
   }
+  console.log(boxArray[i].posY)
+  paintBox(10,10,"sadaw")
   
   requestAnimationFrame(() => {updateGame()});
 }
