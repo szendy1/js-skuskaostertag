@@ -7,6 +7,7 @@ let cHeight = 400;
 let boxSize = 50;
 let boxArray = [];
 let timer = 0;
+let stopGame = false;
 
 
 
@@ -81,14 +82,13 @@ function createBox() {
       }
     }
   }
-  console.log(text)
-  let x = -99;
+  let x = Math.floor(Math.random() * (cWidth - boxSize));
   while (isCollision())
     x = Math.floor(Math.random() * (cWidth - boxSize));
   var box = new myBox();
   box.posX = x;
   box.posY = 0.0;
-  box.speed = Math.floor(Math.random() * 50)/10;
+  box.speed = 0.1+Math.floor(Math.random() * 30)/10;
   box.text = text;
   box.res = result;
   return box;
@@ -119,7 +119,6 @@ function myBox() {
 
 
 document.addEventListener('keydown', function (event) {
-  if (gameData.gameStarted && !gameData.gamePaused) {
     switch (event.which) {
       case 48: checkBox(0); break; //Left key
       case 49: checkBox(1); break; //Up key
@@ -132,7 +131,6 @@ document.addEventListener('keydown', function (event) {
       case 56: checkBox(8); break; //A key
       case 57: checkBox(9); break; //W key
     }
-  }
 });
 
 
@@ -148,6 +146,7 @@ function checkBox(val) {
 }
 
 function startGame() {
+  timer = new Date();
   boxArray = [];
   score = 0;
   boxArray.push(createBox());
@@ -155,14 +154,31 @@ function startGame() {
 }
 
 function updateGame(){
+  if (new Date().getTime() - timer.getTime()> 3000){
+
+    boxArray.push(createBox());
+    timer = new Date();
+  }
   paintBg();
   paintScore();
   for (let i =0; i<boxArray.length;i++){
     boxArray[i].posY += boxArray[i].speed;
     paintBox(boxArray[i].posX,boxArray[i].posY,boxArray[i].text);
   }
-  console.log(boxArray[i].posY)
-  paintBox(10,10,"sadaw")
   
-  requestAnimationFrame(() => {updateGame()});
+  if (!stopGame)
+    requestAnimationFrame(() => {updateGame()});
+}
+
+function playSound(){
+
+}
+
+function checkGroundCollision(){
+  for (let i = 0; i< boxArray.length; i++){
+    if (boxArray[i].posY + boxSize >= cHeight - 50){
+      stopGame = true;
+      console.log("STOP GAME")
+    }
+  }
 }
